@@ -86,11 +86,11 @@ export default function Plan() {
                 <TextField
                   fullWidth
                   label="Preço"
-                  type="decimal"
+                  type="number"
                   value={price}
                   onChange={(e) => setPrice(Number(e.target.value))}
                   required
-                  slotProps={{ htmlInput: { min: 18 } }}
+                  slotProps={{ htmlInput: { step: 0.01 } }}
                 />
               </Grid>
               {formError && (
