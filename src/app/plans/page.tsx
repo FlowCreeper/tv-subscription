@@ -30,16 +30,16 @@ export default function Plan() {
 
     try {
       await fetch("POST", {
-        plans: { name, price: price },
+        plan: { name: name, price: price },
       });
 
-      // Optionally refresh customer list after creation
+      // Optionally refresh plan list after creation
       await fetch("GET");
 
       setName("");
       setPrice("");
     } catch (err) {
-      console.error("Erro ao criar cliente", err);
+      console.error("Erro ao criar plano", err);
     }
   };
 
@@ -59,7 +59,13 @@ export default function Plan() {
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome', type: 'string', width: 120, editable: true },
-    { field: 'price', headerName: 'Preço', type: 'number', width: 100, editable: true },
+    { field: 'price', headerName: 'Preço', type: 'number', width: 100, editable: true, 
+      valueFormatter: (params) => 
+      new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(params), 
+    },
   ]
   return (
     <Grid container spacing={3}>
@@ -80,7 +86,7 @@ export default function Plan() {
                 <TextField
                   fullWidth
                   label="Preço"
-                  type="number"
+                  type="decimal"
                   value={price}
                   onChange={(e) => setPrice(Number(e.target.value))}
                   required
