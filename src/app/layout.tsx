@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import NavBar from "./components/NavBar";
+import { AccountBox, CreditCard, Description, Folder, NoteAdd, Person } from "@mui/icons-material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,10 +25,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const drawerContent = [
+    { text: "Clientes",             icon: <Person />,       href: "/customers" },
+    { text: "Planos",               icon: <Description />,  href: "/plans" },
+    { text: "Serviços Adicionais",  icon: <NoteAdd />,      href: "/services" },
+    { text: "Pacotes",              icon: <Folder />,       href: "/packages" },
+    { text: "Assinaturas",          icon: <AccountBox />,   href: "/subscriptions" },
+    { text: "Cobranças",            icon: <CreditCard />,   href: "/subscriptions"} ,
+  ]
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <NavBar drawerContent={drawerContent}>{children}</NavBar>
+        </ThemeProvider>
       </body>
     </html>
   );
