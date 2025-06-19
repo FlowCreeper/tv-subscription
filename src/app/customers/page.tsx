@@ -58,11 +58,8 @@ export default function Customers() {
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
     { field: 'name', headerName: 'Nome', type: 'string', width: 120, editable: true },
-    { field: 'age', headerName: 'Idade', type: 'number', width: 60, editable: true },
-    { field: 'created_at', headerName: 'Cadastrado em', type: 'string', width: 180 },
-    { field: 'updated_at', headerName: 'Editado em', type: 'string', width: 180 },
+    { field: 'age', headerName: 'Idade', type: 'number', width: 90, editable: true },
   ]
   return (
     <Grid container spacing={3}>

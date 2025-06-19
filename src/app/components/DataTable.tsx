@@ -17,6 +17,13 @@ type DataTableProps = {
 export default function DataTable({ columns, rows, onRowEdit, onDelete }: DataTableProps) {
   const [selectedRows, setSelectedRows] = React.useState<number[]>([]);
 
+  const fullColumns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    ...columns,
+    { field: 'created_at', headerName: 'Cadastrado em', type: 'string', width: 180 },
+    { field: 'updated_at', headerName: 'Editado em', type: 'string', width: 180 },
+  ]
+
   const handleDeleteClick = () => {
     if (onDelete && selectedRows.length > 0) {
       onDelete(selectedRows);
@@ -37,8 +44,12 @@ export default function DataTable({ columns, rows, onRowEdit, onDelete }: DataTa
       </Box>
 
       <DataGrid
-        rows={rows}
-        columns={columns}
+        rows={(rows || []).map((obj: { id: number; created_at: string; updated_at: string }) => ({
+          ...obj,
+          created_at: new Date(obj.created_at).toLocaleString(),
+          updated_at: new Date(obj.updated_at).toLocaleString(),
+        }))}
+        columns={fullColumns}
         checkboxSelection
         pageSizeOptions={[5, 10]}
         onRowSelectionModelChange={(newSelection) => {

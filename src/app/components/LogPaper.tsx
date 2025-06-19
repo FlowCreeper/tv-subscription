@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
 type LogPaperProps = {
@@ -11,7 +11,8 @@ export default function LogPaper({ children, title }: LogPaperProps) {
 
   return (
     <Paper sx={{ p: 3 }}>
-      {title}:
+      <Typography mb={1}> {title} </Typography>
+      
       {children}
     </Paper>
   );
