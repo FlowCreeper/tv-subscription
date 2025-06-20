@@ -32,7 +32,7 @@ export default function RootLayout({
     { text: "Serviços Adicionais",  icon: <NoteAdd />,      href: "/services" },
     { text: "Pacotes",              icon: <Folder />,       href: "/packages" },
     { text: "Assinaturas",          icon: <AccountBox />,   href: "/subscriptions" },
-    { text: "Cobranças",            icon: <CreditCard />,   href: "/subscriptions"} ,
+    { text: "Cobranças",            icon: <CreditCard />,   href: "/bills"} ,
   ]
 
   return (
