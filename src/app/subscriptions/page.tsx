@@ -1,11 +1,12 @@
 "use client"
 
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "../components/DataTable";
-import LogPaper from "../components/LogPaper";
-import { Autocomplete, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import DataTable from "../.components/DataTable";
+import LogPaper from "../.components/LogPaper";
+import { Autocomplete, Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import useApi from "../fetch";
+import useApi from "../.lib/fetch";
+import { Refresh } from "@mui/icons-material";
 
 export default function Subscription() {
   const [formError, setFormError] = useState<string | null>(null);
@@ -58,6 +59,10 @@ export default function Subscription() {
       console.error("Erro ao criar assinatura", err);
     }
   };
+
+  const handleRefreshClick = async () => {
+    await fetch("GET");
+  }
 
   const handleDelete = async (ids: number[]) => {
     for (const id of ids) {
@@ -183,8 +188,13 @@ export default function Subscription() {
         </LogPaper>
       </Grid>
       <Grid size={{ xs: 10 }} flexGrow={1}>
-      { error ? error :
-        <LogPaper title="Assinatura">
+      { error ? 
+        <Grid container position='relative'>
+          <Typography sx={{ position: 'absolute', top: "50%"}}>{error}</Typography>
+          <IconButton sx={{ position: 'absolute', right: 0}} onClick={handleRefreshClick}><Refresh /></IconButton>
+        </Grid> 
+        :
+        <LogPaper title="Assinaturas">
           { loading ? " Loading" : <DataTable columns={columns} rows={data} onDelete={handleDelete} />} 
         </LogPaper>
       }
