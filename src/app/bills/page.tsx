@@ -1,23 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useApi from "../fetch";
 import { Autocomplete, Grid, TextField, Typography, Box, Paper } from "@mui/material";
 
 export default function Bills() {
-  const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<number | null>(null);
   const [pdfBlobs, setPdfBlobs] = useState<Blob[]>([]);
 
   const { data: customers = [] } = useApi("/customers");
   const { data: subscriptions = [] } = useApi("/subscriptions");
 
-  useEffect(() => {
-    return () => {
-      pdfBlobs.forEach((blob) => URL.revokeObjectURL(URL.createObjectURL(blob)));
-    };
-  }, [pdfBlobs]);
-
-  const fetchBills = async (id: string | number) => {
+  const fetchBills = async (id: number) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_LINK}/booklets/${id}`);
       const blob = await response.blob();
@@ -46,10 +39,7 @@ export default function Bills() {
               return `${option.id} - ${customer?.name ?? "Cliente desconhecido"}`;
             }}
             onChange={(_, selected) => {
-              if (selected) {
-                setSelectedSubscriptionId(selected.id);
-                fetchBills(selected.id);
-              }
+              if (selected) fetchBills(selected.id);
             }}
             renderInput={(params) => (
               <TextField {...params} label="Assinatura" variant="outlined" />
