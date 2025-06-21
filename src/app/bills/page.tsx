@@ -33,7 +33,7 @@ export default function Bills() {
             fullWidth
             options={subscriptions}
             getOptionLabel={(option: any) => {
-              const customer = customers.find(
+              const customer = (customers || []).find(
                 (obj: { id: number }) => obj.id === option.customer_id
               );
               return `${option.id} - ${customer?.name ?? "Cliente desconhecido"}`;
