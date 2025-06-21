@@ -1,11 +1,12 @@
 "use client"
 
-import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "../components/DataTable";
-import LogPaper from "../components/LogPaper";
-import { Autocomplete, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import useApi from "../fetch";
+import DataTable from "../.components/DataTable";
+import LogPaper from "../.components/LogPaper";
+import useApi from "../.lib/fetch";
+import { Autocomplete, Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { Refresh } from "@mui/icons-material";
 
 export default function Subscription() {
   const [formError, setFormError] = useState<string | null>(null);
@@ -14,10 +15,10 @@ export default function Subscription() {
   const [packageId, setPackageId] = useState<number | null>(null);
   const [serviceIds, setServiceIds] = useState<number[]>([]);
   
-  const { data: customers = [] } = useApi("/customers");
-  const { data: plans = [] } = useApi("/plans");
-  const { data: packages = [] } = useApi("/packages");
-  const { data: services = [] } = useApi("/adicional_services");
+  const { data: customers } = useApi("/customers");
+  const { data: plans } = useApi("/plans");
+  const { data: packages } = useApi("/packages");
+  const { data: services } = useApi("/adicional_services");
   const { data, error, loading, fetch } = useApi("/subscriptions");
 
   const selectedPackage = (packages || []).find((p: {id: number}) => p.id === packageId);
@@ -59,9 +60,13 @@ export default function Subscription() {
     }
   };
 
+  const handleRefreshClick = async () => {
+    await fetch("GET");
+  }
+
   const handleDelete = async (ids: number[]) => {
     for (const id of ids) {
-      await fetch("DELETE", null, id); // ID in URL, no body
+      await fetch("DELETE", null, id);
     }
     await fetch("GET");
   };
@@ -82,13 +87,12 @@ export default function Subscription() {
     },
     { field: 'adicional_services', headerName: 'Serviços', width: 120,
       renderCell: (params) => {
-        const services = params.value || [];
-        const names = services.map((s: any) => s.name).join(', ');
+        const subs_services = params.value;
+        const names = subs_services.map((s: any) => s.name).join(', ');
         return <span>{names}</span>;
       },
     },
   ]
-  columns
   return (
     <Grid container spacing={3}>
       <Grid size={{ xs: 6 }} flexGrow={1}>
@@ -105,51 +109,55 @@ export default function Subscription() {
                 >
                   {(customers || []).map((customer: any) => (
                     <MenuItem key={customer.id} value={customer.id}>
-                      {customer.name}
+                      {customer.id} - {customer.name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
 
-              <Grid size={{ xs: 12 }}>
-                <FormControl fullWidth required>
-                  <InputLabel id="plan-select-label">Plano</InputLabel>
-                  <Select
-                    labelId="plan-select-label"
-                    value={planId ?? ""}
-                    label="Plano"
-                    onChange={(e) => {
-                      setPlanId(Number(e.target.value));
-                      setPackageId(null); // mutually exclusive
-                    }}
-                  >
-                    {(plans || []).map((plan: any) => (
-                      <MenuItem key={plan.id} value={plan.id}>
-                        {plan.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+              <Grid container size={{ xs: 12 }}>
+                <Grid size={{ xs: 6 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="plan-select-label">Plano</InputLabel>
+                    <Select
+                      labelId="plan-select-label"
+                      value={planId ?? ""}
+                      label="Plano"
+                      onChange={(e) => {
+                        setPlanId(Number(e.target.value));
+                        setPackageId(null); // mutually exclusive
+                      }}
+                    >
+                      {(plans || []).map((plan: any) => (
+                        <MenuItem key={plan.id} value={plan.id}>
+                          {plan.id} - {plan.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid size={{ xs: 6 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="package-select-label">Pacote</InputLabel>
+                    <Select
+                      labelId="package-select-label"
+                      value={packageId ?? ""}
+                      label="Pacote"
+                      onChange={(e) => {
+                        setPackageId(Number(e.target.value));
+                        setPlanId(null); // mutually exclusive
+                      }}
+                    >
+                      {(packages || []).map((pkg: any) => (
+                        <MenuItem key={pkg.id} value={pkg.id}>
+                          {pkg.id} - {pkg.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
-
-              <FormControl fullWidth>
-                <InputLabel id="package-select-label">Pacote</InputLabel>
-                <Select
-                  labelId="package-select-label"
-                  value={packageId ?? ""}
-                  label="Pacote"
-                  onChange={(e) => {
-                    setPackageId(Number(e.target.value));
-                    setPlanId(null); // mutually exclusive
-                  }}
-                >
-                  {(packages || []).map((pkg: any) => (
-                    <MenuItem key={pkg.id} value={pkg.id}>
-                      {pkg.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
 
               <Grid size={{ xs: 12 }}>
                 <Autocomplete
@@ -180,8 +188,13 @@ export default function Subscription() {
         </LogPaper>
       </Grid>
       <Grid size={{ xs: 10 }} flexGrow={1}>
-      { error ? error :
-        <LogPaper title="Assinatura">
+      { error ? 
+        <Grid container position='relative'>
+          <Typography sx={{ position: 'absolute', top: "50%"}}>{error}</Typography>
+          <IconButton sx={{ position: 'absolute', right: 0}} onClick={handleRefreshClick}><Refresh /></IconButton>
+        </Grid> 
+        :
+        <LogPaper title="Assinaturas">
           { loading ? " Loading" : <DataTable columns={columns} rows={data} onDelete={handleDelete} />} 
         </LogPaper>
       }

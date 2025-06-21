@@ -1,11 +1,12 @@
 "use client"
 
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "../components/DataTable";
-import LogPaper from "../components/LogPaper";
-import { Autocomplete, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import DataTable from "../.components/DataTable";
+import LogPaper from "../.components/LogPaper";
+import { Autocomplete, Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import useApi from "../fetch";
+import useApi from "../.lib/fetch";
+import { Refresh } from "@mui/icons-material";
 
 export default function Package() {
   const [name, setName] = useState("");
@@ -50,6 +51,10 @@ export default function Package() {
       console.error("Erro ao criar pacote", err);
     }
   };
+
+  const handleRefreshClick = async () => {
+    await fetch("GET");
+  }
 
   const handleEdit = async (updatedRow: any) => {
     const { id, name, price } = updatedRow;
@@ -157,7 +162,12 @@ export default function Package() {
         </LogPaper>
       </Grid>
       <Grid size={{ xs: 10 }} flexGrow={1}>
-      { error ? error :
+      { error ? 
+        <Grid container position='relative'>
+          <Typography sx={{ position: 'absolute', top: "50%"}}>{error}</Typography>
+          <IconButton sx={{ position: 'absolute', right: 0}} onClick={handleRefreshClick}><Refresh /></IconButton>
+        </Grid> 
+        :
         <LogPaper title="Pacotes">
           { loading ? " Loading" : <DataTable columns={columns} rows={data} onRowEdit={handleEdit} onDelete={handleDelete} />} 
         </LogPaper>

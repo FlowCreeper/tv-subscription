@@ -1,11 +1,12 @@
 "use client"
 
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "../components/DataTable";
-import LogPaper from "../components/LogPaper";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import DataTable from "../.components/DataTable";
+import LogPaper from "../.components/LogPaper";
+import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import useApi from "../fetch";
+import useApi from "../.lib/fetch";
+import { Refresh } from "@mui/icons-material";
 
 export default function Service() {
   const [name, setName] = useState("");
@@ -42,6 +43,10 @@ export default function Service() {
       console.error("Erro ao criar cliente", err);
     }
   };
+
+  const handleRefreshClick = async () => {
+    await fetch("GET");
+  }
 
   const handleEdit = async (updatedRow: any) => {
     const { id, name, price } = updatedRow;
@@ -108,8 +113,13 @@ export default function Service() {
         </LogPaper>
       </Grid>
       <Grid size={{ xs: 10 }} flexGrow={1}>
-      { error ? error :
-        <LogPaper title="Serviço Adicional">
+      { error ? 
+        <Grid container position='relative'>
+          <Typography sx={{ position: 'absolute', top: "50%"}}>{error}</Typography>
+          <IconButton sx={{ position: 'absolute', right: 0}} onClick={handleRefreshClick}><Refresh /></IconButton>
+        </Grid> 
+        :
+        <LogPaper title="Serviços Adicionais">
           { loading ? " Loading" : <DataTable columns={columns} rows={data} onRowEdit={handleEdit} onDelete={handleDelete} />} 
         </LogPaper>
       }

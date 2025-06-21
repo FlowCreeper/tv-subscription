@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import useApi from "../fetch";
+import useApi from "../.lib/fetch";
 import { Autocomplete, Grid, TextField, Typography, Box, Paper } from "@mui/material";
 
 export default function Bills() {
   const [pdfBlobs, setPdfBlobs] = useState<Blob[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const { data: customers = [] } = useApi("/customers");
   const { data: subscriptions = [] } = useApi("/subscriptions");
 
   const fetchBills = async (id: number) => {
+    setLoading(true)
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_LINK}/booklets/${id}`);
       const blob = await response.blob();
@@ -18,6 +20,8 @@ export default function Bills() {
     } catch (err) {
       console.error("Erro ao buscar boletos", err);
       setPdfBlobs([]);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -33,7 +37,7 @@ export default function Bills() {
             fullWidth
             options={subscriptions}
             getOptionLabel={(option: any) => {
-              const customer = customers.find(
+              const customer = (customers || []).find(
                 (obj: { id: number }) => obj.id === option.customer_id
               );
               return `${option.id} - ${customer?.name ?? "Cliente desconhecido"}`;
@@ -50,7 +54,8 @@ export default function Bills() {
 
       <Box sx={{ marginTop: 4 }} height={'100%'}>
         <Grid container spacing={3} height={'100%'}>
-          {pdfBlobs.length > 0 ? (
+          { loading ? "Loading..." :
+          pdfBlobs.length > 0 ? (
             pdfBlobs.map((blob, index) => {
               const url = URL.createObjectURL(blob);
               return (
