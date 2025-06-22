@@ -66,6 +66,7 @@ export default function Customers() {
     { field: 'name', headerName: 'Nome', type: 'string', width: 120, editable: true },
     { field: 'age', headerName: 'Idade', type: 'number', width: 90, editable: true },
   ]
+  
   return (
     <Grid container spacing={3}>
       <Grid size={{ xs: 6 }} flexGrow={1}>

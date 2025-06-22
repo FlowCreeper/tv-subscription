@@ -4,7 +4,6 @@ import {
   GridColDef,
   GridRowModel,
 } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
 import { Box, Button } from "@mui/material";
 
 type DataTableProps = {

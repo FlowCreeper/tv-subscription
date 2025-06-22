@@ -14,7 +14,6 @@ export default function useApi(endpoint: string, options: RequestOptions = {}) {
   const { method = "GET", body = null, immediate = true } = options;
 
   const baseUrl = process.env.NEXT_PUBLIC_API_LINK;
-  const fullUrl = `${baseUrl}${endpoint}`;
 
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);

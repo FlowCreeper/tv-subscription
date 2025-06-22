@@ -18,12 +18,6 @@ import { AccountBox, CreditCard, Description, Folder, NoteAdd, Person } from "@m
 
 const drawerWidth = 240;
 
-type DrawerContent = {
-  text: string;
-  icon: React.ReactElement; // assuming it's a single React component (like an icon)
-  href: string;
-};
-
 const drawerContent = [
   { text: "Clientes",             icon: <Person />,       href: "/customers" },
   { text: "Planos",               icon: <Description />,  href: "/plans" },
