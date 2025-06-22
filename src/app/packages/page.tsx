@@ -72,10 +72,10 @@ export default function Package() {
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Nome', type: 'string', width: 120, editable: true },
-    { field: 'plan_id', headerName: 'Plano', type: 'string', width: 120, editable: true,
-      valueFormatter: (params) => (plans || {}).find((obj: {id: number}) => obj.id === params).name || params,
+    { field: 'plan_id', headerName: 'Plano', type: 'string', width: 120,
+      valueFormatter: (params) => (plans || []).find((obj: {id: number}) => obj.id === params).name || params,
     },
-    { field: 'adicional_services', headerName: 'Serviços', width: 120, editable: true,
+    { field: 'adicional_services', headerName: 'Serviços', width: 120,
       renderCell: (params) => {
         const services = params.value || [];
         const names = services.map((s: any) => s.name).join(', ');

@@ -85,7 +85,7 @@ export default function Subscription() {
         return plan?.name || pkg?.name;
       }
     },
-    { field: 'adicional_services', headerName: 'Serviços', width: 120,
+    { field: 'adicional_services', headerName: 'Serviços Adicionais', width: 150,
       renderCell: (params) => {
         const subs_services = params.value;
         const names = subs_services.map((s: any) => s.name).join(', ');
